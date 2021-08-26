@@ -50,7 +50,7 @@ namespace _40KListBot
         }
 
         //Move This Later
-        private Task Log(LogMessage logMessage)
+        public Task Log(LogMessage logMessage)
         {
             Console.WriteLine(logMessage.ToString());
             return Task.CompletedTask;

@@ -1,5 +1,9 @@
 using Discord.Commands;
 using Discord;
+using System;
+using System.Net;
+using System.Text;
+using _40KListBot;
 using System.Threading.Tasks;
 
 namespace _40KListBot
@@ -16,12 +20,36 @@ namespace _40KListBot
             {
                 foreach (var attachment in attachments) 
                 {
+                    var webClient = new WebClient()
                     if (attachment.Filename.ToLower().Contains("html"))
                     {
-                        EmbedBuilder builder = new EmbedBuilder();
-                        builder.WithTitle("Some Title For An Thing!");
+                        string htmlAsString = "";
+                        try
+                        {
+                            htmlAsString = Encoding.UTF8.GetString(webClient.DownloadData(attachment.Url));
+                            var armyList = new HtmlParser(htmlAsString)?.ParseHtmlIntoArmyList();
+                            var builder = ArmyListParser.ArmyListIntoDiscordRichText(armyList, Context);
+                            Context.Channel.SendMessageAsync("", false, builder.Build());
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
 
-                        Context.Channel.SendMessageAsync("", false, builder.Build());
+                    }
+                    else if (attachment.Filename.ToLower().Contains("txt"))
+                    {
+                        try
+                        {
+                            var armyList = new CustomTextParser(Encoding.UTF8.GetString(webClient.DownloadData(attachment.Url)))
+                                .ParseTextIntoArmyList();
+                            var builder = ArmyListParser.ArmyListIntoDiscordRichText(armyList, Context);
+                            Context.Channel.SendMessageAsync("", false, builder.Build());
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                        }
                     }
                 }
 
