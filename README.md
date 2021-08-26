@@ -1,0 +1,1 @@
+A Simple Discord bot for Beautifying 40K Build Lists (Primarily Battlescribe) for Easier viewing in Discord

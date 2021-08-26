@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>_40KListBot</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Discord.Net" Version="2.4.0"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.2"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="1.1.2"/>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.2"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="1.1.2"/>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.36"/>
+  </ItemGroup>
+</Project>
