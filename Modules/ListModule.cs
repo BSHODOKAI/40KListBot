@@ -20,7 +20,7 @@ namespace _40KListBot
             {
                 foreach (var attachment in attachments) 
                 {
-                    var webClient = new WebClient()
+                    var webClient = new WebClient();
                     if (attachment.Filename.ToLower().Contains("html"))
                     {
                         string htmlAsString = "";
