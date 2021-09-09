@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
@@ -54,6 +55,25 @@ namespace _40KListBot
                         //Maybe?
                         var unitModelNodes = GetChildDocumentNodesFromDocumentNode("//li", unitNode);
                         unit.Models = new List<UnitModel>();
+                        //Handle these units with Complex Tables for Wargear
+                        if (unitModelNodes.Count == 0)
+                        {
+                            var unitModel = new UnitModel();
+                            unitModel.Name = unit.Name;
+                            unitModel.WarGears = new List<WarGear>();
+                            var warGear = new WarGear();
+                            var warGearNodes = GetChildDocumentNodesFromDocumentNode("//p[1]", unitNode);
+                            if (warGearNodes.Count > 0) 
+                            {
+                                if (warGearNodes[0].InnerText.ToLower().Contains("selections"))
+                                {
+                                    warGear.Name = Regex.Replace(warGearNodes[0].InnerText, "(<.*>)", "").Trim();
+                                    unitModel.WarGears.Add(warGear);                        
+                                    unit.Models.Add(unitModel);
+                                }
+
+                            }
+                        }
                         foreach(var unitModelNode in unitModelNodes)
                         {
                             var unitModel = new UnitModel();
@@ -65,6 +85,14 @@ namespace _40KListBot
                             //TODO: Clean Up
                             warGear.Name = GetChildDocumentNodesFromDocumentNode("//span[@class='italic'][2]", unitModelNode).FirstOrDefault()?.InnerText;
                             unitModel.WarGears.Add(warGear);
+                            //Try Again, Fuck Parsing HTML
+                            if (warGear.Name == null && unitModelNodes.Count == 1)
+                            {
+                                HtmlDocument htmlInNode = new HtmlDocument();
+                                htmlInNode.LoadHtml(unitNode.InnerHtml);
+                                var innerNode = htmlInNode.DocumentNode.SelectSingleNode("//p[1]");
+                                warGear.Name = Regex.Match(innerNode.InnerText, "(?<=Selections:).*")?.ToString()?.Trim();
+                            }
                             unit.Models.Add(unitModel);
                         }
                         forceOrg.Units.Add(unit);

@@ -18,24 +18,31 @@ namespace _40KListBot
 {
     public class ArmyListParser
     {
-        public static EmbedBuilder ArmyListIntoDiscordRichText(ArmyList iArmyList, SocketCommandContext iContext)
+        public static List<EmbedBuilder> ArmyListIntoDiscordRichText(ArmyList iArmyList, SocketCommandContext iContext)
         {
-            EmbedBuilder lEmbedBuilder = new EmbedBuilder();
-            lEmbedBuilder.WithTitle(iArmyList.Name);
-            lEmbedBuilder.WithAuthor(iContext.User.Username);
+            List<EmbedBuilder> lEmbedBuilders = new List<EmbedBuilder>();
+
             foreach (var detachment in iArmyList.Detachments)
             {
+                if (lEmbedBuilders.Count == 0) {
+                    var embedBuilder = new EmbedBuilder();
+                    embedBuilder.WithTitle(iArmyList.Name);
+                    embedBuilder.WithAuthor(iContext.User.Username);
+                    lEmbedBuilders.Add(embedBuilder);
+                } 
                 StringBuilder sb = new StringBuilder();
+                var lEmbedBuilder = new EmbedBuilder();
+                lEmbedBuilder.AddField(detachment.Name, "*************");
                 foreach (var forceOrg in detachment.ForceOrgs)
                 {
-                    if (forceOrg.Name.Contains("Configuration")) continue;
+                    //if (forceOrg.Name.Contains("Configuration")) continue;
                     lEmbedBuilder.AddField(forceOrg.Name, "**************************************");
                     //sb.Append(forceOrg.Name);
                     //sb.Append('\n');
                     foreach(var unit in forceOrg.Units)
                     {
-                        if (unit.Name.Contains("[12CP]")) continue;
-                        
+                        //if (unit.Name.Contains("[12CP]")) continue;
+                ;         
                         sb.Append(unit.Name.ToUpper());
                         sb.Append('\n');
                         
@@ -61,10 +68,12 @@ namespace _40KListBot
                     myString = HttpUtility.HtmlDecode(myString);
                     lEmbedBuilder.AddField("Units", myString);
                     sb.Clear();
+                    
                 }
+                lEmbedBuilders.Add(lEmbedBuilder);
                 //lEmbedBuilder.AddField(detachment.Name, sb.ToString());
             }
-            return lEmbedBuilder;
+            return lEmbedBuilders;
         }
     }
 }
