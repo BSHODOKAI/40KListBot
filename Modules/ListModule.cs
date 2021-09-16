@@ -37,7 +37,11 @@ namespace _40KListBot
                         }
                         catch (Exception ex)
                         {
+                            Context.Channel.SendMessageAsync($"An Error Occured parsing your list, {ex.Message}", false);
+                            Context.User.SendMessageAsync("You Broke something! Its in logs, but you can submit a bug ticket to: https://github.com/BSHODOKAI/40KListBot");
                             Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.StackTrace);
+                            Console.WriteLine(ex.InnerException);
                         }
 
                     }

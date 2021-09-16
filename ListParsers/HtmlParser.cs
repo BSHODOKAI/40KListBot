@@ -62,16 +62,19 @@ namespace _40KListBot
                             unitModel.Name = unit.Name;
                             unitModel.WarGears = new List<WarGear>();
                             var warGear = new WarGear();
-                            var warGearNodes = GetChildDocumentNodesFromDocumentNode("//p[1]", unitNode);
-                            if (warGearNodes.Count > 0) 
+                            for (int i = 1; i < 5; i++)
                             {
-                                if (warGearNodes[0].InnerText.ToLower().Contains("selections"))
+                                var warGearNodes = GetChildDocumentNodesFromDocumentNode($"//p[{i}]", unitNode);
+                                if (warGearNodes.Count > 0) 
                                 {
-                                    warGear.Name = Regex.Replace(warGearNodes[0].InnerText, "(<.*>)", "").Trim();
-                                    unitModel.WarGears.Add(warGear);                        
-                                    unit.Models.Add(unitModel);
-                                }
+                                    if (warGearNodes[0].InnerText.ToLower().Contains("selections"))
+                                    {
+                                        warGear.Name = Regex.Replace(warGearNodes[0].InnerText, "(<.*>)", "").Trim();
+                                        unitModel.WarGears.Add(warGear);                        
+                                        unit.Models.Add(unitModel);
+                                    }
 
+                                }
                             }
                         }
                         foreach(var unitModelNode in unitModelNodes)

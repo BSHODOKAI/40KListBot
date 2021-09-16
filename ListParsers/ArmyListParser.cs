@@ -52,9 +52,12 @@ namespace _40KListBot
                             //sb.Append(" Selections:");
                             foreach (var warGear in unitModel.WarGears)
                             {
-                                sb.Append(" - ");
+                                if (warGear != unitModel.WarGears.Last()) 
+                                {
+                                    sb.Append(" - ");
+                                }
                                 sb.Append(warGear.Name);
-                                if (warGear != unitModel.WarGears[unitModel.WarGears.Count - 1])
+                                if (warGear != unitModel.WarGears.Last())
                                 {
                                     sb.Append(", ");    
                                 }
@@ -66,7 +69,14 @@ namespace _40KListBot
                     var myString = sb.ToString();
                     myString = Regex.Replace(myString, "\\[[0-9]*pts\\]", "");
                     myString = HttpUtility.HtmlDecode(myString);
-                    lEmbedBuilder.AddField("Units", myString);
+                    if (myString.Length > 1024) {
+                        Console.WriteLine($"String Exceeds Max Length by Discord Embedd, String Value is: {myString}");
+                        lEmbedBuilder.AddField("Units", myString.Substring(0, 1020));
+                        lEmbedBuilder.AddField("Error:", "Previous field was truncated because it exceeded limits.");
+                        iContext.User.SendMessageAsync($"Your List Exceeded the max lengths used by Discord, its in logs but you can submit a ticket to https://github.com/BSHODOKAI/40KListBot"); 
+                    } else {
+                        lEmbedBuilder.AddField("Units", myString);
+                    } 
                     sb.Clear();
                     
                 }
