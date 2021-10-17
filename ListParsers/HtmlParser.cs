@@ -29,7 +29,7 @@ namespace _40KListBot
             var armyList = new ArmyList();
             //I hate Xpath, Make it better later.
             var node =  _htmlDoc.DocumentNode.SelectSingleNode("//h1");
-            armyList.Name = node.InnerText;
+            armyList.Name = node?.InnerText ?? "Default List Name";
             //Split all this crap into separate functions for testing/maintenance
             armyList.Detachments = new List<Detachment>();
             var detachmentNodes = _htmlDoc.DocumentNode.SelectNodes("//li[@class='force']");
