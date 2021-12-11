@@ -94,7 +94,13 @@ namespace _40KListBot
                                 HtmlDocument htmlInNode = new HtmlDocument();
                                 htmlInNode.LoadHtml(unitNode.InnerHtml);
                                 var innerNode = htmlInNode.DocumentNode.SelectSingleNode("//p[1]");
-                                warGear.Name = Regex.Match(innerNode.InnerText, "(?<=Selections:).*")?.ToString()?.Trim();
+                                try {
+                                    warGear.Name = Regex.Match(innerNode.InnerText, "(?<=Selections:).*")?.ToString()?.Trim();
+                                } catch (Exception ex) {
+                                    warGear.Name  = "Wierd James Error";
+                                    Console.Write(ex);
+                                }
+
                             }
                             unit.Models.Add(unitModel);
                         }

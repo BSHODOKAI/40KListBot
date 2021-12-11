@@ -39,13 +39,20 @@ namespace _40KListBot
             if (iSocketMessage == null) return; //Who the fuck writes code like this?
 
             int argPos = 0;
+            
+            var context = new SocketCommandContext(_client, lSocketMessage);
 
+            if (lSocketMessage?.Content?.ToLower()?.Contains("marshall") ?? false) {
+                await _commands.ExecuteAsync(
+                    context: context,
+                    argPos: argPos,
+                    services: null
+                );
+            }
             if (!(lSocketMessage.HasCharPrefix('!', ref argPos) ||
                   lSocketMessage.HasMentionPrefix(_client.CurrentUser, ref argPos)) ||
                   lSocketMessage.Author.IsBot)
                   return; //Sample Code like this gives you cancer.
-
-            var context = new SocketCommandContext(_client, lSocketMessage);
 
             await _commands.ExecuteAsync(
                 context: context,
